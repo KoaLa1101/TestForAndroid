@@ -48,11 +48,15 @@ class MainActivity : AppCompatActivity() {
         val pass = password!!.text.toString()
         var isExist = false
 
+        var q: Boolean
+        val regE: String
+        val regP: String
+        q = false
+        regE = "([0-9a-zA-Z]+[\\.\\-_]?)*[0-9a-zA-Z]+@([0-9a-zA-Z]+[\\.\\-_]?)+\\.[0-9a-zA-Z]+"
+        regP = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d]{6,}$"
         if (email.isNotEmpty() && pass.isNotEmpty()) {
-            if (Regex("([0-9a-zA-Z]+[\\.\\-_]?)*[0-9a-zA-Z]+@([0-9a-zA-Z]+[\\.\\-_]?)+\\.[0-9a-zA-Z]+").find(
-                    email) != null
-                && Regex("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d]{6,}$").find(pass) != null
-            ) {
+            if (Regex(regE).find(email) != null && Regex(regP).find(pass) != null) {
+                q = true
                 for (user in myData) {
                     if (user.email == email && user.password == pass) {
                         val editor = pref.edit()
@@ -69,11 +73,10 @@ class MainActivity : AppCompatActivity() {
 
                     }
                 }
-                if(!isExist)
-                    Toast.makeText(this, "Login or password error", Toast.LENGTH_LONG).show()
             }
-        }
-        else
+            if (!isExist || !q)
+                Toast.makeText(this, "Login or password error", Toast.LENGTH_LONG).show()
+        } else
             Toast.makeText(this, "Fill graphs email and password", Toast.LENGTH_LONG).show()
     }
 }
